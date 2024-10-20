@@ -1,0 +1,30 @@
+{
+  "name": "news-explorer-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/annaeckman/News-Explorer-Backend.git"
+  },
+  "keywords": [
+    "news",
+    "topics",
+    "news",
+    "search",
+    "news",
+    "api"
+  ],
+  "author": "anna eckman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/annaeckman/News-Explorer-Backend/issues"
+  },
+  "homepage": "https://github.com/annaeckman/News-Explorer-Backend#readme"
+}
