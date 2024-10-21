@@ -28,7 +28,7 @@ const articleSchema = new mongoose.Schema({
       message: "You must enter a valid URL",
     },
   },
-  owner: "",
+  owner: { select: false },
 });
 
 module.exports = mongoose.model("Article", articleSchema);
