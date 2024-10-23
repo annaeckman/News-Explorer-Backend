@@ -1,11 +1,14 @@
 const router = require("express").Router();
+const {
+  getArticles,
+  createSavedArticle,
+  deleteArticle,
+} = require("../controllers/articles");
 
-//  returns all articles saved by the user
-// GET /articles
+router.get("/articles", getArticles);
 
-// creates an article with the passed
-// keyword, title, text, date, source, link, and image in the body
-// POST /articles
+router.post("/articles", createSavedArticle);
 
-// deletes the stored article by _id
-// DELETE /articles/articleId
+router.delete("/articles/articleId", deleteArticle);
+
+module.exports = router;

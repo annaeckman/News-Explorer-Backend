@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const { getCurrentUser } = require("../controllers/users");
+const auth = require("../middlewares/auth");
 
-// returns information about the logged-in user (email and name)
-// GET /users/me
+router.use(auth);
 
 router.get("/me", getCurrentUser);
 
