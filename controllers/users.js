@@ -3,7 +3,13 @@ const bcrypt = require("bcryptjs");
 const validator = require("validator");
 const User = require("../models/user");
 
+const { SUCCESSFUL_REQUEST } = require("../utils/status");
 const { JWT_SECRET } = require("../utils/config");
+
+const { BadRequestError } = require("../utils/BadRequestError");
+const { NotFoundError } = require("../utils/NotFoundError");
+const { UnauthorizedError } = require("../utils/UnauthorizedError");
+const { ConflictError } = require("../utils/ConflictError");
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -12,10 +18,10 @@ const getCurrentUser = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return next(res.status(404).send({ message: "Item not found" }));
+        return next(new NotFoundError("Item not found"));
       }
       if (err.name === "CastError") {
-        return next(res.status(400).send({ message: "Invalid data provided" }));
+        return next(new BadRequestError("Invalid data provided"));
       }
       return next(err);
     });
@@ -26,12 +32,12 @@ const createUser = (req, res, next) => {
 
   // Check if email is missing
   if (!email) {
-    return next(res.status(400).send({ message: "Email is required" }));
+    return next(new BadRequestError("Email is required"));
   }
 
   // Validate email format
   if (!validator.isEmail(email)) {
-    return next(res.status(400).send({ message: "Invalid email format" }));
+    return next(new BadRequestError("Invalid email format"));
   }
 
   return User.findOne({ email })
@@ -46,19 +52,17 @@ const createUser = (req, res, next) => {
         const response = newUser.toObject();
         delete response.password;
 
-        return res.status(201).send({ data: response });
+        return res.status(SUCCESSFUL_REQUEST).send({ data: response });
       });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return next(res.status(400).send({ message: "Invalid data provided" }));
+        return next(new BadRequestError("Invalid data provided"));
       }
       if (err.message === "Email already in use") {
         return next(
-          res
-            .status(409)
-            .send({ message: "An account exists already with this email" })
+          new ConflictError("An account exists already with this email")
         );
       }
       return next(err);
@@ -69,11 +73,11 @@ const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(res.status(400).send({ message: "Invalid email or password" }));
+    return next(new BadRequestError("Invalid email or password"));
   }
 
   if (!validator.isEmail(email)) {
-    return next(res.status(400).send({ message: "Invalid email format" }));
+    return next(new BadRequestError("Invalid email format"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -87,7 +91,7 @@ const loginUser = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.message === "Incorrect email or password") {
-        return next(res.status(401).send({ message: "Unauthorized" }));
+        return next(new UnauthorizedError("Invalid email or password"));
       }
       return next(err);
     });
