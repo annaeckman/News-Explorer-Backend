@@ -9,12 +9,50 @@ const getArticles = (req, res, next) => {
     .catch(next);
 };
 
-const createSavedArticle = (req, res, next) => {
-  // this happens when a user that is signed in clicks the save button...
-  // I want it to grab all the properties from the article that the save button is on
-  // AND the owner id, and the keyword that was used to search for said article
+const saveArticle = (req, res, next) => {
+  const { keyword, title, text, date, source, link, image } = req.body;
+
+  Article.create({
+    keyword,
+    title,
+    text,
+    date,
+    source,
+    link,
+    image,
+    owner: req.user._id,
+  })
+    .then((article) => {
+      res.send({ data: article });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid data provided"));
+      }
+      return next(err);
+    });
 };
 
-const deleteArticle = (req, res, next) => {};
+const deleteArticle = (req, res, next) => {
+  const { articleId } = req.params;
+  const userId = req.user._id;
 
-module.exports = { getArticles, createSavedArticle, deleteArticle };
+  Article.findById(articleId)
+    .orFail()
+    .then((article) => {
+      if (article.owner.toString() !== userId) {
+        throw new ForbiddenError(
+          "You do not have permission to delete this item"
+        );
+      }
+      return Article.findByIdAndDelete(articleId);
+    })
+    .then((article) => res.send(article))
+    .catch((err) => {
+      console.error(err);
+      return next(err);
+    });
+};
+
+module.exports = { getArticles, saveArticle, deleteArticle };

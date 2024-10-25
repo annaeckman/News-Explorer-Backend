@@ -1,14 +1,15 @@
 const router = require("express").Router();
+const auth = require("../middlewares/auth");
 const {
   getArticles,
-  createSavedArticle,
+  saveArticle,
   deleteArticle,
 } = require("../controllers/articles");
 
-router.get("/articles", getArticles);
+router.get("/", auth, getArticles);
 
-router.post("/articles", createSavedArticle);
+router.post("/", auth, saveArticle);
 
-router.delete("/articles/articleId", deleteArticle);
+router.delete("/articleId", auth, deleteArticle);
 
 module.exports = router;
