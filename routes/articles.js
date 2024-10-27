@@ -10,6 +10,6 @@ router.get("/", auth, getArticles);
 
 router.post("/", auth, saveArticle);
 
-router.delete("/articleId", auth, deleteArticle);
+router.delete("/:id", auth, deleteArticle);
 
 module.exports = router;

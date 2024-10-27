@@ -2,9 +2,10 @@ const Article = require("../models/article");
 const { BadRequestError } = require("../utils/BadRequestError");
 const { ForbiddenError } = require("../utils/ForbiddenError");
 const { NotFoundError } = require("../utils/NotFoundError");
+const mongoose = require("mongoose");
 
 const getArticles = (req, res, next) => {
-  Article.find({})
+  Article.find({ owner: req.user._id })
     .then((articles) => res.send(articles))
     .catch(next);
 };
@@ -35,22 +36,30 @@ const saveArticle = (req, res, next) => {
 };
 
 const deleteArticle = (req, res, next) => {
-  const { articleId } = req.params;
+  const articleId = req.params.id;
   const userId = req.user._id;
 
   Article.findById(articleId)
     .orFail()
     .then((article) => {
-      if (article.owner.toString() !== userId) {
-        throw new ForbiddenError(
-          "You do not have permission to delete this item"
+      const articleOwner = new mongoose.Types.ObjectId(
+        article.owner
+      ).toString();
+
+      if (articleOwner === userId) {
+        return Article.findByIdAndDelete({ _id: article._id }).then((article) =>
+          res.send({ data: article })
         );
       }
-      return Article.findByIdAndDelete(articleId);
     })
-    .then((article) => res.send(article))
     .catch((err) => {
       console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("Item not found"));
+      }
+      if (err.name === "CastError") {
+        return next(new BadRequestError("Invalid item ID"));
+      }
       return next(err);
     });
 };
