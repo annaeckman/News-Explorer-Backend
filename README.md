@@ -13,6 +13,13 @@ REST API
 Custom Mongoose Models
 bcryptjs
 
-## Deployed Website
+## Domain Name
+
+www.mynewsexplorer.jumpingcrab.com
+mynewsexplorer.jumpingcrab.com
 
 (put website here)[]
+
+## Link to Frontend
+
+(frontend link)[https://github.com/annaeckman/News-Explorer-Frontend.git]
