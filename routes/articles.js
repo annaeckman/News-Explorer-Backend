@@ -5,10 +5,11 @@ const {
   saveArticle,
   deleteArticle,
 } = require("../controllers/articles");
+const { validateArticleData } = require("../middlewares/validation");
 
 router.get("/", auth, getArticles);
 
-router.post("/", auth, saveArticle);
+router.post("/", auth, validateArticleData, saveArticle);
 
 router.delete("/:id", auth, deleteArticle);
 

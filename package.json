@@ -32,7 +32,6 @@
     "celebrate": "^15.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "eslint": "^9.13.0",
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
     "express-winston": "^4.2.0",
@@ -45,8 +44,9 @@
     "winston": "^3.15.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.13.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
     "globals": "^15.11.0"
   }
 }

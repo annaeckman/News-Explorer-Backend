@@ -31,7 +31,3 @@ const articleSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Article", articleSchema);
-
-// owner — the _id of the user who saved the article.
-// You need to set the default behavior so that the
-// database doesn't return this field

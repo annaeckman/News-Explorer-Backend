@@ -1,7 +1,8 @@
+const mongoose = require("mongoose");
 const Article = require("../models/article");
 const { BadRequestError } = require("../utils/BadRequestError");
 const { NotFoundError } = require("../utils/NotFoundError");
-const mongoose = require("mongoose");
+const { ForbiddenError } = require("../utils/ForbiddenError");
 
 const getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
@@ -46,10 +47,12 @@ const deleteArticle = (req, res, next) => {
       ).toString();
 
       if (articleOwner === userId) {
-        return Article.findByIdAndDelete({ _id: article._id }).then((article) =>
-          res.send({ data: article })
+        return Article.findByIdAndDelete({ _id: article._id }).then((art) =>
+          res.send({ data: art })
         );
       }
+
+      return next(new ForbiddenError("Not authorized to delete this article"));
     })
     .catch((err) => {
       console.error(err);
