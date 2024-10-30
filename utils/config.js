@@ -1,8 +1,3 @@
-const { JWT_SECRET = "super-strong-secret" } = process.env;
-
 const mongoServerAddress = "mongodb://127.0.0.1:27017/newsexplorer_db";
 
-module.exports = {
-  JWT_SECRET,
-  mongoServerAddress,
-};
+module.exports = { mongoServerAddress };

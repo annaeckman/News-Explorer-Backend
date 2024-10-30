@@ -4,7 +4,8 @@ const validator = require("validator");
 const User = require("../models/user");
 
 const { SUCCESSFUL_REQUEST } = require("../utils/status");
-const { JWT_SECRET } = require("../utils/config");
+
+const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret";
 
 const { BadRequestError } = require("../utils/BadRequestError");
 const { NotFoundError } = require("../utils/NotFoundError");
