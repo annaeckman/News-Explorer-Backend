@@ -8,12 +8,13 @@ const { limiter } = require("./utils/rate-limit");
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { mongoServerAddress } = require("./utils/config");
 
 const app = express();
 const { PORT = 3002 } = process.env;
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/newsexplorer_db")
+  .connect(mongoServerAddress)
   .then(() => {})
   .catch(console.error);
 
@@ -25,6 +26,12 @@ app.use(limiter);
 app.use(express.json());
 
 app.use(cors());
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 app.use(requestLogger);
 

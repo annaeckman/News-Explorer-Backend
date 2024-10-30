@@ -1,4 +1,12 @@
 const { Joi, celebrate } = require("celebrate");
+const validator = require("validator");
+
+const validateURL = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
 
 module.exports.validateRegisterBody = celebrate({
   body: Joi.object().keys({
@@ -31,19 +39,19 @@ module.exports.validateArticleData = celebrate({
   body: Joi.object().keys({
     keyword: Joi.string()
       .required()
-      .message({ "string.empty": 'The "keyword" field must be filled in' }),
+      .messages({ "string.empty": 'The "keyword" field must be filled in' }),
     title: Joi.string()
       .required()
-      .message({ "string.empty": 'The "title" field must be filled in' }),
+      .messages({ "string.empty": 'The "title" field must be filled in' }),
     text: Joi.string()
       .required()
-      .message({ "string.empty": 'The "text" field must be filled in' }),
+      .messages({ "string.empty": 'The "text" field must be filled in' }),
     date: Joi.string()
       .required()
-      .message({ "string.empty": 'The "date" field must be filled in' }),
+      .messages({ "string.empty": 'The "date" field must be filled in' }),
     source: Joi.string()
       .required()
-      .message({ "string.empty": 'The "source" field must be filled in' }),
+      .messages({ "string.empty": 'The "source" field must be filled in' }),
     link: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "link" field must be filled in',
       "string.uri": 'the "link" field must be a valid url',
