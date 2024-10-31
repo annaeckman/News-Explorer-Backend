@@ -8,6 +8,13 @@ const validateURL = (value, helpers) => {
   return helpers.error("string.uri");
 };
 
+const validateId = (value, helpers) => {
+  if (validator.isHexadecimal(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
+
 module.exports.validateRegisterBody = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
@@ -59,6 +66,14 @@ module.exports.validateArticleData = celebrate({
     image: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "image" field must be filled in',
       "string.uri": 'the "image" field must be a valid url',
+    }),
+  }),
+});
+
+module.exports.validateId = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().required().custom(validateId).messages({
+      "string.uri": "Id's must be a hexadecimal value 24 characters in length",
     }),
   }),
 });
