@@ -11,6 +11,7 @@ const getArticles = (req, res, next) => {
 };
 
 const saveArticle = (req, res, next) => {
+  console.log(req.body);
   const { keyword, title, text, date, source, link, image } = req.body;
 
   Article.create({
